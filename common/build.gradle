@@ -1,0 +1,8 @@
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "org.hibernate:hibernate-validator"
+
+    testCompile "junit:junit:$junitVersion"
+}

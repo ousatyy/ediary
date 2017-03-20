@@ -1,0 +1,42 @@
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    compile project(':common')
+    compile project(':jpa-persistence')
+
+    // Spring
+    compile('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: "spring-boot-starter-logging"
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile('org.springframework.boot:spring-boot-starter-actuator') {
+        exclude module: "spring-boot-starter-logging"
+    }
+    compile 'org.springframework.boot:spring-boot-starter-undertow'
+    //Swagger
+    compile "io.springfox:springfox-swagger2:$springfoxVersion"
+    compile "io.springfox:springfox-swagger-ui:$springfoxVersion"
+    // Javax
+    compile "javax.servlet:javax.servlet-api:$servletApiVersion"
+    // Util
+    compile "net.sf.dozer:dozer:$dozerVersion"
+    compile "fm.void.jetm:jetm-spring:$jetmVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+    // DB
+    compile "com.zaxxer:HikariCP:$hikaryCPVersion"
+    compile "mysql:mysql-connector-java:$mySqlConnectorVersion"
+    // Testing
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile "org.mockito:mockito-all:$mockitoVersion"
+}
+
+war {
+    archiveName = "${project.name}.war"
+    manifest {
+        attributes(
+                'Build-Time': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'API-Version': version
+        )
+    }
+}

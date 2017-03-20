@@ -1,0 +1,85 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE'
+    }
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
+
+    dependencyManagement {
+        imports {
+            mavenBom 'org.springframework:spring-framework-bom:4.3.5.RELEASE'
+            mavenBom 'org.springframework.boot:spring-boot-starter-parent:1.4.3.RELEASE'
+        }
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+    group = 'com.gmail.ousatyy.ediary'
+    version = "0.0.1"
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    repositories {
+        jcenter()
+        mavenCentral()
+
+        maven { url "https://repository.openknowledge.de/jetm-libs" }
+    }
+
+    ext {
+        springKafkaVersion = '1.1.2.RELEASE'
+
+        hibernateVersion = '5.2.6.Final'
+        mySqlConnectorVersion = '5.1.38'
+        hikaryCPVersion = '2.4.6'
+        liquibaseVersion = '3.5.1'
+
+        springfoxVersion = '2.6.1'
+        okHttpVersion = '3.2.0'
+        servletApiVersion = '3.1.0'
+
+        quartzVersion = '2.2.3'
+        guavaVersion = '21.0-rc2'
+        jetmVersion = '1.3.0-Beta3'
+        jacksonVersion = '2.8.5'
+        lombokVersion = '1.16.12'
+        dozerVersion = '5.5.1'
+
+        velocityVersion='1.7'
+        velocityToolsVersion='2.0'
+
+        mockitoVersion = '1.10.19'
+        junitVersion = '4.12'
+    }
+
+    dependencies {
+        compile 'org.springframework.boot:spring-boot-starter-log4j2'
+        compileOnly "org.projectlombok:lombok:$lombokVersion"
+    }
+}
+
+task assembleSubProjects << {
+    subprojects.each {
+        p ->
+            if (p.tasks.findByName("war")) {
+                copy {
+                    from p.war.archivePath
+                    into file("${System.env.ENGAGE_BUILD_DIR}")
+                }
+            }
+    }
+}
+
+assembleSubProjects.dependsOn subprojects.build

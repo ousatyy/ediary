@@ -1,0 +1,5 @@
+rootProject.name = 'ediary'
+
+include 'common'
+include 'jpa-persietence'
+include 'api'
